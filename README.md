@@ -1,7 +1,9 @@
 
 # Chat App
 
-Talk with people on your local network using this convenient event-driven chat app powered by socket.io.
+Talk with people using this convenient event-driven chat app powered by socket.io.
+
+You can download the client from the socket-client repo! 
 
 ### Author: Tyler Sayvetz
 
