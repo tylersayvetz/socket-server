@@ -34,5 +34,5 @@ function broadcastNewChatter() {
   io.emit('server-message', message)
 }
 
-server.listen(3000, () => console.log('socket.io server up on 3000'))
+server.listen(3003, () => console.log('listening on 3003'))
 
