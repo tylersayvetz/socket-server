@@ -2,58 +2,54 @@ import express from 'express';
 import http from 'http';
 import socket, { Socket } from 'socket.io';
 
-const app = express()
+const app = express();
 const server = new http.Server(app);
 const io = socket(server);
 
 const data = {
-  numUsers: 0,
+    numUsers: 0
+};
+
+function broadcastNumUsers(): void {
+    io.emit('update-num-users', data.numUsers);
 }
 
+function introUser(socket: Socket): void {
+    socket.emit('get-name', 'Introduce yourself!');
+}
 
-io.on('connection', socket => {
-  
-  broadcastNewChatter();
-  introUser(socket);
+function broadcastNewChatter(): void {
+    const message = {
+        name: '',
+        payload: 'Sombody joined the chat room!'
+    };
+    io.emit('server-message', message);
+}
 
-  data.numUsers++
-  broadcastNumUsers();
+io.on('connection', (socket) => {
+    broadcastNewChatter();
+    introUser(socket);
 
-  console.log('a user connected');
-
-  socket.on('disconnect', () => {
-    console.log('a user DISconnected');
-    --data.numUsers
+    data.numUsers++;
     broadcastNumUsers();
-  })
 
-  socket.on('chat-message', data => {
-    console.log('a user sent a chat message:', data)
+    console.log('a user connected');
 
-    io.emit('chat-message', data)
-  })
-  socket.on('typing', (data) => {
-    console.log(`${data} is typing...`);
-    io.emit('typing-message', data)
-  })  
+    socket.on('disconnect', () => {
+        console.log('a user DISconnected');
+        --data.numUsers;
+        broadcastNumUsers();
+    });
 
-})
+    socket.on('chat-message', (data) => {
+        console.log('a user sent a chat message:', data);
 
-function broadcastNumUsers() {
-  io.emit('update-num-users', data.numUsers)
-}
+        io.emit('chat-message', data);
+    });
+    socket.on('typing', (data) => {
+        console.log(`${data} is typing...`);
+        io.emit('typing-message', data);
+    });
+});
 
-function introUser(socket: Socket) {
-  socket.emit('get-name', 'Introduce yourself!')
-}
-
-function broadcastNewChatter() {
-  const message = {
-    name: '',
-    payload: 'Sombody joined the chat room!', 
-  }
-  io.emit('server-message', message)
-}
-
-server.listen(3003, () => console.log('listening on 3003'))
-
+server.listen(3003, () => console.log('listening on 3003'));
