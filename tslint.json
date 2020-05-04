@@ -1,0 +1,19 @@
+{
+    "defaultSeverity": "warning",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "jsRules": {},
+    "rules": {
+        "quotemark": [true, "single"],
+        "trailing-comma": false,
+        "max-classes-per-file": false,
+        "one-line": [false, "check-open-brace"],
+        "object-literal-sort-keys": false,
+        "no-empty": false,
+        "variable-name": [true, "allow-leading-underscore"]
+    },
+    "jsEnable": false,
+    "rulesDirectory": [],
+    "exclude": ["node_modules/**", "src/db/migrations.backup", "src/db/models.backup", "src/db/seeds.backup"]
+}

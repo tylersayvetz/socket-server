@@ -1,8 +1,10 @@
-const express = require('express')
+import express from 'express';
+import http from 'http';
+import socket, { Socket } from 'socket.io';
+
 const app = express()
-const http = require('http')
-const server = http.Server(app)
-const io = require('socket.io')(server)
+const server = new http.Server(app);
+const io = socket(server);
 
 const data = {
   numUsers: 0,
@@ -11,7 +13,7 @@ const data = {
 
 io.on('connection', socket => {
   
-  broadcastNewChatter(socket);
+  broadcastNewChatter();
   introUser(socket);
 
   data.numUsers++
@@ -41,7 +43,7 @@ function broadcastNumUsers() {
   io.emit('update-num-users', data.numUsers)
 }
 
-function introUser(socket) {
+function introUser(socket: Socket) {
   socket.emit('get-name', 'Introduce yourself!')
 }
 
